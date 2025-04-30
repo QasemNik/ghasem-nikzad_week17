@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+body{
+    @apply bg-gray-100 dark:bg-gray-800 overflow-x-hidden
+}
+.menuBurger{
+    @apply  sm:flex flex-col sm:flex-row gap-2
+        absolute sm:relative font-semibold
+        left-4 right-0 top-full md:flex 
+        md:justify-center md:items-center sm:top-auto
+        bg-white dark:bg-gray-800 
+        shadow-lg sm:shadow-none
+        rounded-lg sm:rounded-none
+        p-4 sm:p-0
+        z-50
+}
+.navItems {
+    @apply flex items-center space-x-2 px-4 py-2 rounded-lg w-full
+}
+.contactList {
+    @apply p-3 border rounded-lg
+
+}
+.contactListBox {
+    @apply bg-gray-50 border-teal-400/15 dark:bg-gray-700 dark:border-gray-500
+
+}
+.contactListSelected{
+    @apply bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-2xs 
+}
