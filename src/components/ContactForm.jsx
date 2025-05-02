@@ -3,6 +3,8 @@ import { useContactForm } from '../hooks/useContactForm';
 import ImageUpload from './ImageUpload';
 import InputField from './InputField';
 import { useContacts } from '../context/ContactContext';
+import { handleImageChange } from '../helper/handleImageChange';
+import contactData from '../helper/contactData';
 
 export default function ContactForm({ contact, onClose }) {
   const { dispatch } = useContacts();
@@ -15,50 +17,31 @@ export default function ContactForm({ contact, onClose }) {
       loadContact(contact);
     }
     firstNameRef.current?.focus();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contact]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const contactData = {
-      id:'',
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      image: formData.image,
-    };
+    const contactsData = contactData(formData, contact)
 
     dispatch({
       type: contact ? 'UPDATE_CONTACT' : 'ADD_CONTACT',
-      payload: { ...contactData, id: contact ? contact.id : Date.now().toString() },
+      payload: { ...contactsData, id: contact ? contact.id : Date.now().toString() },
     });
 
     resetForm();
     onClose();
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.size <= 5000000) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setField('image', reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else if (file) {
-      alert('Image size should be less than 5MB');
-    }
-  };
 
   return (
     <form onSubmit={handleSubmit}
       className="space-y-4">
       <ImageUpload
         image={formData.image}
-        onImageChange={handleImageChange}
+        onImageChange={handleImageChange(setField)}
         fileInputRef={fileInputRef}
         onButtonClick={() => fileInputRef.current?.click()}
       />
@@ -87,7 +70,7 @@ export default function ContactForm({ contact, onClose }) {
         type="email"
         name="email"
         value={formData.email}
-        placeholder="john@exmaple.com"
+        placeholder="exmaple@mail.com"
         onChange={(e) => setField('email', e.target.value)}
         error={formData.errors.email}
       />
